@@ -1,0 +1,81 @@
+{
+  "name": "ev-api1",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ev-api1/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/ev-api1",
+        "format": [
+          "cjs"
+        ],
+        "bundle": false,
+        "main": "apps/ev-api1/src/main.ts",
+        "tsConfig": "apps/ev-api1/tsconfig.app.json",
+        "assets": [
+          "apps/ev-api1/src/assets"
+        ],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "buildTarget": "ev-api1:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "ev-api1:build:development"
+        },
+        "production": {
+          "buildTarget": "ev-api1:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": [
+        "build"
+      ],
+      "command": "docker build -f apps/ev-api1/Dockerfile . -t ev-api1"
+    },
+    "docker-tag": {
+      "dependsOn": [
+        "docker-build"
+      ],
+      "options": {
+        "tag": "ev-api1:latest"
+      },
+      "command": "docker tag ev-api1 {args.tag} && docker push {args.tag}"
+    }
+  }
+}
