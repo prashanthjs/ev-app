@@ -6,7 +6,7 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send({ message: 'Hello API1 howa re you?' });
+  res.send({ message: 'Hello API1 how are you?' });
 });
 
 app.listen(port, host, () => {
