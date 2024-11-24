@@ -38,7 +38,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/ev-api1-e2e/**/*"]
+      "exclude": ["apps/ev-api1/**/*"]
     }
   ],
   "generators": {

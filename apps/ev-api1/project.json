@@ -43,6 +43,15 @@
         }
       }
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/ev-api1/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "dependsOn": ["^build"]
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
@@ -68,14 +77,15 @@
       ],
       "command": "docker build -f apps/ev-api1/Dockerfile . -t ev-api1"
     },
-    "docker-tag": {
+    "docker-push": {
       "dependsOn": [
         "docker-build"
       ],
       "options": {
-        "tag": "ev-api1:latest"
+        "tagVersion": "latest",
+        "registry": "docker.io"
       },
-      "command": "docker tag ev-api1 {args.tag} && docker push {args.tag}"
+      "command": "docker tag ev-api1 {args.registry}/ev-app/ev-api1:{args.tagVersion} && docker push {args.registry}/ev-app/ev-api1:{args.tagVersion}"
     }
   }
 }

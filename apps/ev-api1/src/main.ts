@@ -1,14 +1,12 @@
-import express from 'express';
+import app from './app';
+import { serve } from '@hono/node-server';
 
-const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+console.log(`Server is running on http://localhost:${port}`)
 
-const app = express();
+serve({
+  fetch: app.fetch,
+  port
+})
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API1 howa re you?' });
-});
-
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
-});
+export default app;
