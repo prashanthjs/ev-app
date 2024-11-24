@@ -70,4 +70,4 @@ jobs:
 
       - name: Build and push docker image
         if: steps.extract_branch.outputs.branch == 'main'
-        run: npx nx affected -t  docker-push --registry=631248157752.dkr.ecr.us-east-1.amazonaws.com --tagVersion=${{ github.sha }} --base=main~1 --head=main
+        run: npx nx affected -t  docker-push --registry=${{ steps.login-ecr.outputs.registry }} --tagVersion=${{steps.extract_branch.outputs.branch}}-${{ github.sha }} --base=main~1 --head=main
