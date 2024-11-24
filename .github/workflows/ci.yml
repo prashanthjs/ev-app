@@ -49,7 +49,7 @@ jobs:
           echo "HEAD: ${{ env.NX_HEAD }}"
           echo "REF: ${{ github.ref }}"
           echo "branch: ${{ steps.extract_branch.outputs.branch }}"
-          echo "branch: ${{ env.ECR_REGISTRY}}"
+          echo "branch: ${{ secrets.ECR_REGISTRY}}"
 
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
