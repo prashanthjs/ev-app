@@ -36,6 +36,14 @@ jobs:
         run: |
           echo "BASE: ${{ env.NX_BASE }}"
           echo "HEAD: ${{ env.NX_HEAD }}"
+          echo "REF: ${{ github.ref }}"
 
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
+
+      - name: Build and push docker image
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker build -f apps/ev-frontend1/Dockerfile . -t ev-frontend1
+          docker tag ev-frontend1 631248157752.dkr.ecr.us-east-1.amazonaws.com/ev-app/ev-frontend1:latest
+          docker push 631248157752.dkr.ecr.us-east-1.amazonaws.com/ev-app/ev-frontend1:latest
