@@ -59,7 +59,7 @@ jobs:
       - name: Login to Amazon ECR
         if: steps.extract_branch.outputs.branch == 'main'
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push docker image
         if: steps.extract_branch.outputs.branch == 'main'
