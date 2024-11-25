@@ -1,6 +1,6 @@
 FROM docker.io/node:lts-alpine
 
-ENV PORT=3000
+ENV PORT=4200
 
 WORKDIR /app
 
@@ -13,6 +13,6 @@ RUN chown -R ev-api1:ev-api1 .
 
 RUN npm --prefix ev-api1 --omit=dev -f install
 
-EXPOSE 3000
+EXPOSE 4200
 
 CMD [ "node", "ev-api1" ]

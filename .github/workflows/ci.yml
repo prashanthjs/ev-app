@@ -43,14 +43,6 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
-      - name: Print NX environment variables
-        run: |
-          echo "BASE: ${{ env.NX_BASE }}"
-          echo "HEAD: ${{ env.NX_HEAD }}"
-          echo "REF: ${{ github.ref }}"
-          echo "branch: ${{ steps.extract_branch.outputs.branch }}"
-          echo "ecrRegistry: ${{ secrets.ECR_REGISTRY}}"
-          echo "ecrRegistry: ${{ secrets.AWS_REGION}}"
 
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
