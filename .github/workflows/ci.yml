@@ -26,7 +26,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Cache node_modules
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -34,7 +33,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install
 
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v4
@@ -44,11 +43,13 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
-
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
+
   DockerPush:
+    needs: [Build]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -58,11 +59,11 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Run, build, and test affected apps
-        run: npx nx affected -t  build
+      - name: Install Dependencies
+        run: |
+          npm install
 
       - name: Configure AWS credentials
-        if: steps.extract_branch.outputs.branch == 'main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
@@ -70,9 +71,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        if: steps.extract_branch.outputs.branch == 'main'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
 
       - name: Build and push docker image
         if: steps.extract_branch.outputs.branch == 'main'
