@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  main:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -47,6 +47,19 @@ jobs:
 
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
+  DockerPush:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Run, build, and test affected apps
+        run: npx nx affected -t  build
 
       - name: Configure AWS credentials
         if: steps.extract_branch.outputs.branch == 'main'
