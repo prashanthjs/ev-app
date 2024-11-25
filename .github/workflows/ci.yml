@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  main:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -26,7 +26,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Cache node_modules
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -44,12 +43,23 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
-
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
 
+  DockerPush:
+    needs: [Build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
       - name: Configure AWS credentials
-        if: steps.extract_branch.outputs.branch == 'main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
@@ -57,12 +67,17 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        if: steps.extract_branch.outputs.branch == 'main'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Install Dependencies
+        run: |
+          npm install
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
       - name: Build and push docker image
-        if: steps.extract_branch.outputs.branch == 'main'
         run: |
           npx nx affected -t  docker-push --registry=${{ steps.login-ecr.outputs.registry }} --tagVersion=${{steps.extract_branch.outputs.branch}}-${{ github.sha }} --base=main~1 --head=main
           npx nx affected -t  docker-push --registry=${{ steps.login-ecr.outputs.registry }} --tagVersion=latest --base=main~1 --head=main
