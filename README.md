@@ -4,24 +4,18 @@
 
 ```sh
 npx nx serve ev-frontend1
+npx nx serve ev-frontend2
+npx nx serve ev-api1
+npx nx serve ev-api2
 ```
 
 ## Build the app
 
 ```sh
 npx nx build ev-frontend1
-```
-
-## Run the api
-
-```sh
-npx nx serve ev-api1
-```
-
-## Build the api
-
-```sh
+npx nx build ev-frontend2
 npx nx build ev-api1
+npx nx build ev-api2
 ```
 
 ## Run the api in docker
