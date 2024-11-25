@@ -20,7 +20,7 @@
         "tagVersion": "latest",
         "registry": "docker.io"
       },
-      "command": "docker tag ev-frontend1 {args.registry}/ev-app/ev-frontend1:{args.tagVersion} && docker push {args.registry}/ev-app/ev-frontend1:{args.tagVersion}"
+      "command": "docker tag ev-frontend1 {args.registry}/ev-app/ev-frontend1:{args.tagVersion} && docker push {args.registry}/ev-app/ev-frontend1:{args.tagVersion} && echo ev-app/ev-frontend1:{args.tagVersion}"
     }
   }
 }

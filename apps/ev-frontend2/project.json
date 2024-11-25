@@ -1,0 +1,26 @@
+{
+  "name": "ev-frontend2",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ev-frontend2/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project ev-frontend2 --web",
+  "targets": {
+    "docker-build": {
+      "dependsOn": [
+        "build"
+      ],
+      "command": "docker build -f apps/ev-frontend2/Dockerfile . -t ev-frontend2"
+    },
+    "docker-push": {
+      "dependsOn": [
+        "docker-build"
+      ],
+      "options": {
+        "tagVersion": "latest",
+        "registry": "docker.io"
+      },
+      "command": "docker tag ev-frontend2 {args.registry}/ev-app/ev-frontend2:{args.tagVersion} && docker push {args.registry}/ev-app/ev-frontend2:{args.tagVersion} && echo ev-app/ev-frontend2:{args.tagVersion}"
+    }
+  }
+}

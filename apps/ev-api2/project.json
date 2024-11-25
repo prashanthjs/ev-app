@@ -1,28 +1,22 @@
 {
-  "name": "ev-api1",
+  "name": "ev-api2",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/ev-api1/src",
+  "sourceRoot": "apps/ev-api2/src",
   "projectType": "application",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/ev-api1",
-        "format": [
-          "cjs"
-        ],
+        "outputPath": "dist/apps/ev-api2",
+        "format": ["cjs"],
         "bundle": false,
-        "main": "apps/ev-api1/src/main.ts",
-        "tsConfig": "apps/ev-api1/tsconfig.app.json",
-        "assets": [
-          "apps/ev-api1/src/assets"
-        ],
+        "main": "apps/ev-api2/src/main.ts",
+        "tsConfig": "apps/ev-api2/tsconfig.app.json",
+        "assets": ["apps/ev-api2/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -55,19 +49,17 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "ev-api1:build",
+        "buildTarget": "ev-api2:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "ev-api1:build:development"
+          "buildTarget": "ev-api2:build:development"
         },
         "production": {
-          "buildTarget": "ev-api1:build:production"
+          "buildTarget": "ev-api2:build:production"
         }
       }
     },
@@ -75,7 +67,7 @@
       "dependsOn": [
         "build"
       ],
-      "command": "docker build -f apps/ev-api1/Dockerfile . -t ev-api1"
+      "command": "docker build -f apps/ev-api2/Dockerfile . -t ev-api2"
     },
     "docker-push": {
       "dependsOn": [
@@ -85,7 +77,7 @@
         "tagVersion": "latest",
         "registry": "docker.io"
       },
-      "command": "docker tag ev-api1 {args.registry}/ev-app/ev-api1:{args.tagVersion} && docker push {args.registry}/ev-app/ev-api1:{args.tagVersion} && echo ev-app/ev-api1:{args.tagVersion}"
+      "command": "docker tag ev-api2 {args.registry}/ev-app/ev-api2:{args.tagVersion} && docker push {args.registry}/ev-app/ev-api2:{args.tagVersion} && echo ev-app/ev-api2:{args.tagVersion}"
     }
   }
 }
