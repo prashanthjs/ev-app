@@ -35,13 +35,8 @@ jobs:
         run: |
           npm install
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      - name: Derive appropriate SHAs
         uses: nrwl/nx-set-shas@v4
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
 
       - name: Run, build, and test affected apps
         run: npx nx affected -t lint test build
@@ -76,8 +71,13 @@ jobs:
         run: |
           npm install
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      - name: Derive appropriate SHAs
         uses: nrwl/nx-set-shas@v4
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
 
       - name: Build and push docker image
         run: |
