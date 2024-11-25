@@ -31,8 +31,11 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Nx Cloud start ci run
+        run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+
       - name: Install Dependencies
-        run:  npm install
+        run:  npm ci
 
       - name: Derive appropriate SHAs
         uses: nrwl/nx-set-shas@v4
@@ -67,7 +70,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Derive appropriate SHAs
         uses: nrwl/nx-set-shas@v4
@@ -76,6 +79,9 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
+
+      - name: Nx Cloud start ci run
+        run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="docker-push"
 
       - name: Build and push docker image
         run: |
