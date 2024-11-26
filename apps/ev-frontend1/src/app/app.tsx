@@ -18,7 +18,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          EV Frontend1 is running!!
+          EV Frontend1 is a frontend application for the EV project
         </p>
       </div>
     </div>
